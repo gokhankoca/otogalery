@@ -1,6 +1,6 @@
 <?php
 
-$baglanti=mysql_connect("localhost", "root", "qwer1234");
+$baglanti=mysql_connect("localhost", user, "password");
 mysql_select_db("proje",$baglanti);
 
 		
