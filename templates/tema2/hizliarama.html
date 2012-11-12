@@ -1,0 +1,162 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#marka').change(function(){
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				url:"ajax/altmarka.php",
+				data:"marka="+$(this).val(),
+				success:function(j){
+					$("#tur").html("<option value='0'>Farketmez</option>");
+					if(j.count>0){
+						$.each(j.data,function(k,tur){
+							$("#tur").append("<option value='"+tur.ototurID+"'>"+tur.ototurADI+"</option>");
+						});
+					}else{
+					$("#ototur").html("<option>Kayıt Bulunamadi gardaccim</option>");
+					}
+				}
+			});
+		});
+		$("#marka").trigger("change");
+	});
+</script>
+<div id="arama" style="width:250px;height:290px;border:0px dashed;">
+	<div class="caption">
+		Araç Arama
+	</div>
+	<form action="ilan_arama.php" method="GET">
+	<div id="cerceve" style="width:250px;font-style:sans-serif;font-size:13px;">
+		<table width="245" border="0">
+			<tr>
+				<td width="70">El </td><td> :
+					<select name="el">
+						<option value="0">Farketmez</option>
+						<?php
+						$sql="SELECT * FROM otoel ORDER BY otoelID DESC";
+						$qry=mysql_query($sql);
+						while ($rows = mysql_fetch_array($qry)){
+						?>
+						   <option value="<?php echo $rows['otoelID']; ?>"><?php echo $rows['otoelADI']; ?></option>
+						
+						<?php
+						}
+						echo "</select>";
+			
+						?> 
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Araç Tip </td><td>: 
+					<select name="tip" name="tip">
+						<option value="0">Farketmez</option>
+						<?php
+						$sql="SELECT * FROM ototip ORDER BY ototipID DESC";
+						$qry=mysql_query($sql);
+						while ($rows = mysql_fetch_array($qry)){
+						?>
+						   <option value="<?php echo $rows['ototipID']; ?>"><?php echo $rows['ototipADI']; ?></option>
+						
+						<?php
+						}
+						echo "</select>";
+						
+						?> 
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Marka </td><td>: 
+					<select id="marka" name="marka">
+						<option value="0">Farketmez</option>
+						<?php
+						$sql="SELECT * FROM otomarka ORDER BY otomarkaADI ASC";
+						$qry=mysql_query($sql);
+						while ($rows = mysql_fetch_array($qry)){
+						?>
+						   <option value="<?php echo $rows['otomarkaID']; ?>"><?php echo $rows['otomarkaADI']; ?></option>
+						
+						<?php
+						}
+						echo "</select>";
+						
+						?> 
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Araç Türü </td>
+				<td>
+					: <select id="tur" name="tur">
+
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Model </td><td>: 
+					<select id="ilkmodel" name="ilkmodel">
+						<?php
+						$busene = date('Y');
+						for($i=1970; $i<=$busene; $i++){
+						?>
+			   				<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+			
+						<?php
+							}
+						echo "</select>";
+						?> 
+			 - 			
+ 					<select id="sonmodel" name="sonmodel">
+			 			<?php
+						$busene = date('Y');
+						for($i=$busene; $i>=1970; $i--){
+						?>
+			   				<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+			
+						<?php
+							}
+						echo "</select>";
+						?>
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Fiyat </td><td>: 
+						<select id="ilkfiyat" name="ilkfiyat">
+						<?php
+						for($i=0; $i<=100000; $i=$i+5000){
+						?>
+			   				<option value="<?php echo $i; ?>" style="text-align:right;"><?php echo $i; ?></option>
+			
+						<?php
+							}
+						echo "</select>";
+						?> 
+			 - 			
+ 					<select id="sonfiyat" name="sonfiyat">
+			 			<?php
+						for($i=150000; $i>=0; $i=$i-3000){
+						?>
+			   				<option value="<?php echo $i; ?>" style="text-align:right;"><?php echo $i; ?></option>
+			
+						<?php
+							}
+						echo "</select>";
+						?> 
+				</td>
+			</tr>
+			<tr>
+				<td width="70">Sıralama </td>
+				<td>
+				: <select name="siralama">
+					<option value="0">Farketmez</option>
+					<option value="1">Fiyat Artan</option>
+					<option value="2">Fiyat Azalan</option>
+					<option value="3">Son Eklenen</option>
+					<option value="4">İlk Eklenen</option>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center" style="padding:5px;"><input type="submit" value="Ara" style="width:100px;""></td>
+			</tr>
+		</table>
+	</div>
+	</form>
+</div>

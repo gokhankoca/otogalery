@@ -1,0 +1,216 @@
+<?php
+if (!isset($_SESSION["user"]))
+header("Location: /admin/login.php");
+
+?>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#marka').change(function(){
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				url:"../ajax/altmarka.php",
+				data:"marka="+$(this).val(),
+				success:function(j){
+					console.log(j);
+					$("#tur").html("");
+					if(j.count>0){
+						$.each(j.data,function(k,tur){
+							$("#tur").append("<option value='"+tur.ototurID+"'>"+tur.ototurADI+"</option>");
+						});
+					}else{
+					$("#ototur").html("<option>No Entry</option>");
+					}
+				}
+			});
+		});
+		$("#marka").trigger("change");
+		$('#tip').change(function(){
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				url:"../ajax/alttip.php",
+				data:"tip="+$(this).val(),
+				success:function(j){
+					$("#kasatipi").html("");
+					if(j.count>0){
+						$.each(j.data,function(k,tip){
+							$("#kasatipi").append("<option value='"+tip.otokasatipID+"'>"+tip.otokasatipADI+"</option>");
+						});
+					}else{
+					$("#kasatipi").html("<option>No Safe Type</option>");
+					}
+				}
+			});
+		});
+		$("#tip").trigger("change");
+	});
+</script>
+
+<div id='adminortamenu'><h2>Add New Announcement</h2></div>
+
+<div id='anaiceriktablo'>
+<form method="POST" action="?ak=ilanyaz" enctype="multipart/form-data">
+<table>
+<tr>
+	<td>Announcement Title :</td>
+	<td><input type="text" name="ilanbaslik" size="50"></td>
+</tr>
+<tr>
+	<td>Stock</td>
+	<td>
+		<select name="el">
+			<?php
+			$sql="SELECT * FROM otoel ORDER BY otoelID DESC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otoelID']; ?>"><?php echo $rows['otoelADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+	</td>
+</tr>
+<tr>
+	<td>Tip</td>
+	<td>
+		<select name="tip" id="tip">
+			<?php
+			$sql="SELECT * FROM ototip ORDER BY ototipID DESC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['ototipID']; ?>"><?php echo $rows['ototipADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+	</td>
+</tr>
+<tr>
+	<td>Trademark</td>
+	<td>
+		<select id="marka" name="marka">
+			<?php
+			$sql="SELECT * FROM otomarka ORDER BY otomarkaADI ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otomarkaID']; ?>"><?php echo $rows['otomarkaADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+	</td>
+</tr>
+
+<tr>
+	<td>Model</td>
+	<td>
+		<select id="model" name="model">
+		<?php
+			$busene = date('Y');
+			for($i=$busene; $i>=1970; $i--){
+		?>
+   <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+
+<?php
+}
+echo "</select>";
+			?> 
+	</td>
+</tr>
+<tr><td>Fuel Type</td><td><select name="yakit"><option value="1">Gasoline</option><option value="2">Diesel</option></select></td></tr>
+<tr>
+	<td>Safe Type</td>
+	<td>
+		<select name="kasatipi" id="kasatipi">
+			
+		</select>
+	</td>
+</tr>
+<tr>
+	<td>Colour</td>
+	<td><select name="renk">
+			<?php
+			$sql="SELECT * FROM otorenk ORDER BY otorenkID ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otorenkID']; ?>"><?php echo $rows['otorenkADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+		</select>
+		
+	</td>
+</tr>
+<tr><td>Engine Volume</td><td><input type="text" name="hacim"> cm3</td></tr>
+<tr><td>Engine Power</td><td><input type="text" name="beygir"> hp</td></tr>
+<tr><td>Steering</td><td><select name="dumen"><option value="1">Left</option><option value="2">Right</option></select></td></tr>
+<tr><td>Kilometer</td><td><input type="text" name="km"></td></tr>
+<tr><td>Gear</td><td><input type="text" name="vitesadeti" size="1">
+		<select name="vitestipi" style="margin-left:15px;">
+			<?php
+			$sql="SELECT * FROM otovitestipi ORDER BY otovitestipID ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otovitestipID']; ?>"><?php echo $rows['otovitestipADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+		</select>
+</td></tr>
+<tr><td>Door Number</td><td><input type="text" name="kapi" size="1"></td></tr>
+<tr><td>Price</td><td><input type="text" name="otofiyat"><select name="parabirimi" style="margin-left:15px;"><option value="TL">TL</option><option value="STG">STG</option><option value="EURO">Euro</option><option value="Dolar">Dolar</option></select></td></tr>
+<tr><td>Explanation</td><td><textarea name="not" cols="40" rows="6"></textarea></td></tr>
+</table>
+</div>
+
+<div id="anaiceriktablo">
+<table>
+<tr>
+	<td>Image 1 :</td><td><input type="file" name="resim1"></td>
+</tr>
+<tr>
+	<td>Image 2 :</td><td><input type="file" name="resim2"></td>
+</tr>
+<tr>
+	<td>Image 3 :</td><td><input type="file" name="resim3"></td>
+</tr>
+<tr>
+	<td>Image 4 :</td><td><input type="file" name="resim4"></td>
+</tr>
+<tr>
+	<td>Image 5 :</td><td><input type="file" name="resim5"></td>
+</tr>
+<tr>
+	<td><input type="submit" name="gonder" value="Send"></td>
+</tr>
+</table>
+</div>
+</form>
+</div>
+</div>
+</div> 
+

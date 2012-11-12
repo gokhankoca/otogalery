@@ -1,0 +1,170 @@
+<html>
+<head>
+	<title>Slide Show</title>
+	<style type="text/css" media="screen">
+	body{
+		background-color: #111;
+		color: white;
+		font-family: Arial, "MS Trebuchet", sans-serif;
+	}
+	
+	h2{
+		color:#8091b0;
+	}
+	div#slideShowItems{
+	  	height:200px;
+		overflow:hidden;
+		position:relative;
+	}
+	
+	div#slideShowItems div{
+		width:626px;
+	}
+	
+	
+	div#slideShowItems img {
+		margin-right:13px;
+		float:left;
+	}
+	
+	ul#slideShowCount{
+		margin:0px;
+		padding:0px;
+		width:626px;
+	}
+	ul#slideShowCount li.slide{
+		line-height:14px;
+		float:right;
+		cursor:pointer;
+		width:26px;
+		height:18px;
+		display:block;
+		background: transparent url(tabs.jpg) no-repeat scroll left top;
+	}
+	
+	ul#slideShowCount li.slide span{
+		padding-left:10px;
+		color:white;
+		font-weight:bold;
+		font-size:12px;
+	}
+	
+	ul#slideShowCount li.slide:hover{
+		background-position:left -18px;
+	}
+	
+	ul#slideShowCount li.slide.selectedTab{
+		background-position:left -18px;
+	}
+	div#slideShow{
+		background:#222;
+		width:626px;
+	}
+	
+	</style>
+</head>
+<body>
+	<div id="slideShow">
+		<div id="slideShowItems">
+			<div>
+				<img alt="" src="image1.jpg" border="0" />
+				<h2>Slide 1</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+			</div>
+			<div>
+				<img alt="" src="image2.jpg" border="0" />
+				<h2>Slide 2</h2>
+				<p>Laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+			<div>
+				<img alt="" src="image3.jpg" border="0" />
+				<h2>Slide 3</h2>
+				<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+/* Slide Show */
+$(document).ready(function() {
+	$('#slideShowItems div').hide().css({position:'absolute',width:'600px'});
+
+var currentSlide = -1;
+var prevSlide = null;
+var slides = $('#slideShowItems div');
+var interval = null;
+var FADE_SPEED = 500;
+var DELAY_SPEED = 15000;
+
+var html = '<ul id="slideShowCount">'
+
+for (var i = slides.length - 1;i >= 0 ; i--){
+	html += '<li id="slide'+ i+'" class="slide"><span>'+(i+1)+'</span></li>' ;
+}
+
+html += '</ul>';
+$('#slideShow').after(html);
+
+for (var i = slides.length - 1;i >= 0 ; i--){
+	$('#slide'+i).bind("click",{index:i},function(event){
+		currentSlide = event.data.index;
+		gotoSlide(event.data.index);
+	});
+};
+
+if (slides.length <= 1){
+	$('.slide').hide();
+}
+
+nextSlide();
+
+function nextSlide (){
+
+	if (currentSlide >= slides.length -1){
+		currentSlide = 0;
+	}else{
+		currentSlide++
+	}
+
+	gotoSlide(currentSlide);
+
+}
+
+function gotoSlide(slideNum){
+
+	if (slideNum != prevSlide){
+
+		if (prevSlide != null){
+			$(slides[prevSlide]).stop().hide();
+			$('#slide'+prevSlide).removeClass('selectedTab');
+		}
+
+		$('#slide'+currentSlide).addClass('selectedTab');
+
+
+		$('#slide'+slideNum).addClass('selectedTab');
+		$('#slide'+prevSlide).removeClass('selectedTab');
+
+		$(slides[slideNum]).stop().slideDown(FADE_SPEED,function(){
+			$(this).css({opacity:1});
+			if(jQuery.browser.msie){
+				this.style.removeAttribute('filter');
+			}
+		});
+
+		prevSlide = currentSlide;
+
+		if (interval != null){
+			clearInterval(interval);
+		}
+		interval = setInterval(nextSlide, DELAY_SPEED);
+	}
+
+}
+});
+
+</script>
+

@@ -1,0 +1,143 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('img._otofoto').click(function() {
+			newImg = $(this).attr('src');
+			$('#_buyukfoto').animate({opacity: 0}, 100, function() {
+				$('#_buyukfoto').attr('src', newImg);
+				$('#_buyukfoto').animate({opacity: 1}, 100);
+			});
+		});
+		
+		$('img._otofoto').mouseover(function() {
+			$(this).animate({opacity: 1}, 100);
+		});
+		
+		$('img._otofoto').mouseout(function() {
+			$('._otofoto').animate({opacity: 0.5}, 100);
+		});
+		
+		$('._otofoto').css('opacity', 0.5);
+		$('._otofoto').css('cursor', 'pointer');
+	});
+</script>
+
+<div id="mainsabit">
+	<?php 
+		$id=$_GET['id'];
+		
+		
+		$sql="SELECT *, date_format(ilanTARIH, '%d.%m.%Y') as ilanTARIH FROM ilan I 
+		INNER JOIN otoel E ON I.ilanEL=E.otoelID 
+		INNER JOIN otomarka M ON ilanMARKA=M.otomarkaID 
+		INNER JOIN ototip TP ON TP.ototipID=I.ilanTIP 
+		INNER JOIN otoyakit Y ON Y.otoyakitID=I.ilanYAKIT 
+		INNER JOIN otovitestipi VT ON VT.otovitestipID=I.ilanVITESTIP
+		INNER JOIN otokasatip KT ON KT.otokasatipID=I.ilanKASA
+		INNER JOIN otorenk R ON R.otorenkID=I.ilanRENK
+		WHERE ilanID=$id ORDER BY ilanID DESC";
+		$ilanlar=$db->get_row($sql);
+	?>
+	<div id='ilangostercerceve'>
+		<div id='sabitbaslik'>
+			<?php echo "$ilanlar->ilanBASLIK"; ?>
+		</div>
+		
+
+		<div id='ilanresimler' style="float:left;border:0px dashed;width:400px;height:400px;">
+			<div id="anaresim">
+				<img id="_buyukfoto" src="uploads/otofoto/<?php echo $ilanlar->resim1; ?>" style="width:400px;height:300px;">
+			</div>
+			<div id="kucukresimler" style="border:0px dashed;height:65px;">
+				<div class="kucukresimcerceve">
+					<?php if (!empty($ilanlar->resim1)){ ?>
+					<img class="_otofoto" src="uploads/otofoto/<?php echo $ilanlar->resim1; ?>" style="width:75px;" />
+					<?php } ?>
+				</div>
+				<div class="kucukresimcerceve">
+					<?php if (!empty($ilanlar->resim2)){ ?>
+					<img class="_otofoto" src="uploads/otofoto/<?php echo $ilanlar->resim2; ?>" style="width:75px;" />
+					<?php } ?>
+				</div>
+				<div class="kucukresimcerceve">
+					<?php if (!empty($ilanlar->resim2)){ ?>
+					<img class="_otofoto" src="uploads/otofoto/<?php echo $ilanlar->resim3; ?>" style="width:75px;" />
+					<?php } ?>
+				</div>
+				<div class="kucukresimcerceve">
+					<?php if (!empty($ilanlar->resim2)){ ?>
+					<img class="_otofoto" src="uploads/otofoto/<?php echo $ilanlar->resim4; ?>" style="width:75px;" />
+					<?php } ?>
+				</div>
+				<div class="kucukresimcerceve">
+					<?php if (!empty($ilanlar->resim2)){ ?>
+					<img class="_otofoto" src="uploads/otofoto/<?php echo $ilanlar->resim5; ?>" style="width:75px;" />
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+	<div id="ilandetaylari" style="float:right;border:0px dashed;width:260px;height:400px;font-size:14px;padding-left:5px;">
+		<table>
+			<tr>
+				<td class="ozellikbaslik">Added Date</td><td> <?php echo $ilanlar->ilanTARIH; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Stock</td><td> <?php echo $ilanlar->otoelADI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Tip</td><td> <?php echo $ilanlar->ototipADI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Trademark</td><td> <?php echo $ilanlar->otomarkaADI; ?></td>
+			</tr>
+			
+			<tr>
+				<td class="ozellikbaslik">Model</td><td> <?php echo $ilanlar->ilanMODEL; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Engine Volume</td><td> <?php echo $ilanlar->ilanHACIM; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Engine Power</td><td> <?php echo $ilanlar->ilanGUC; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Steering</td><td> <?php if (($ilanlar->ilanDUMEN)=='1') { echo "Right"; } else {	echo "Left"; }; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Kilometer</td><td> <?php echo $ilanlar->ilanKM; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Fuel Type</td><td> <?php echo $ilanlar->otoyakitADI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Gear</td><td> <?php echo $ilanlar->otovitestipADI." (".$ilanlar->ilanVITES; ?>)</td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Safe Type</td><td> <?php echo $ilanlar->otokasatipADI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Colour</td><td> <?php echo $ilanlar->otorenkADI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Door</td><td> <?php echo $ilanlar->ilanKAPI; ?></td>
+			</tr>
+			<tr>
+				<td class="ozellikbaslik">Price</td><td id="ilangosterfiyat"> 
+					<?php 
+						$fiyat = $ilanlar->ilanFIYAT;
+						$duzenlifiyat = number_format($fiyat);
+						echo $duzenlifiyat." ".$ilanlar->ilanFIYATTIP; 
+					?>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="ilangosterbaslik">Content</div>
+	<div id="aracaciklama" style="border:0px dashed;clear:both;padding:5px;padding-bottom:10px;font-size:13px;">
+		<?php echo $ilanlar->ilanNOT; ?>
+	</div>
+	
+		<?php include("rastgele.html"); ?>
+
+<div id="clear"></div>
+
+</div>

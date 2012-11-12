@@ -1,0 +1,46 @@
+<?php
+if (!isset($_SESSION["user"]))
+header("Location: /admin/login.php");
+?>
+
+<div id="adminortamenu">
+<h2>Add Safe Type</h2>
+<form action="?ak=kasatipyaz" method="POST" enctype="multipart/form-data">
+<table>
+<tr>
+<td>Category Name :</td><td>
+<select name="turustkat">
+<?php
+$sql="SELECT * FROM ototip ORDER BY ototipID DESC";
+$qry=mysql_query($sql);
+while ($rows = mysql_fetch_array($qry)){
+	print_r($rows);
+?>
+   <option value="<?php echo $rows['ototipID']; ?>"><?php echo $rows['ototipADI']; ?></option>
+
+<?php
+}
+echo "</select>";
+
+?> 
+</td></tr>
+<tr><td>Safe Type Name</td><td><input type="text" name="kasatipkat"></td><td><input type="submit" name="gonder" value="Add"></td></tr>
+</tr>
+</table>
+</form>
+</div>
+<?php
+
+echo "<div id='anaiceriktablo'>";
+	userbaglanti();
+	
+	echo "<table border=0><tr id='anaiceriktablobaslik'><td>ID</td><td width=150>Category Name</td></tr>"; 
+	
+	$qry = mysql_query("SELECT * FROM otokasatip ORDER BY otokasatipID DESC");
+	while($row = mysql_fetch_array($qry))
+		
+	echo "<tr><td>$row[otokasatipID]</td><td>$row[otokasatipADI]</td><td><a href='?ak=kasatipsil&id=$row[otokasatipID]' title='Delete'><img src='images/sil.jpg' /></a></td></tr>";
+	echo "</table>";
+	echo "</div>";
+	
+?>

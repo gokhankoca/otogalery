@@ -1,0 +1,38 @@
+<?php
+
+include_once "class/ez_sql_core.php";
+
+include_once "class/ez_sql_mysql.php";
+
+$vt_kullanici="root";
+$vt_parola="qwer1234";
+$vt_isim="proje";
+$vt_sunucu="localhost";
+
+$db = new ezSQL_mysql($vt_kullanici,$vt_parola,$vt_isim,$vt_sunucu);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title><?php include("title.php"); ?></title>
+<?php $row = siteinfocek(); ?>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="<?php echo "$row[metadesc]"; ?>" />
+<meta name="keywords" content="<?php echo "$row[metakey]"; ?>" />
+<link type="text/css" rel="stylesheet" href="<?php echo "templates/$row[sitetema]/style.css";?>" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<body>
+<div id="header">
+	<div id="headerleft"><img src="templates/<?php echo $row['sitetema']; ?>/images/logo.gif" style="border:0px dashed;"/></div>
+	<div id="headerright"><img src="templates/<?php echo $row['sitetema']; ?>/images/top_moto.gif" /></div>
+</div>
+<div id="tabletop">
+		<div id="tabletopleft">
+			<div id="navcontainer">
+				<ul id="navlist">
+				<li id="active"><a href="index.php" id="current">Homepage</a></li>
+				</ul>
+			</div>
+		</div>
+	<div id="tabletopright"><img src="templates/<?php echo $row['sitetema']; ?>/images/bottom_moto.jpg" /></div>
+</div>

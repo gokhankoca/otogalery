@@ -1,0 +1,30 @@
+<?php
+if (!isset($_SESSION["user"]))
+header("Location: /admin/login.php");
+?>
+
+<div id="adminortamenu">
+<h2>Add Colour</h2>
+<form action="?ak=renkyaz" method="POST" enctype="multipart/form-data">
+<table>
+<tr>
+<td>Category Name :</td><td><input type="text" name="renkkat"></td><td><input type="submit" name="gonder" value="Add"></td>
+</tr>
+</table>
+</form>
+</div>
+<?php
+
+echo "<div id='anaiceriktablo'>";
+	userbaglanti();
+	
+	echo "<table border=0><tr id='anaiceriktablobaslik'><td>ID</td><td width=150>Category Name</td></tr>"; 
+	
+	$qry = mysql_query("SELECT * FROM otorenk ORDER BY otorenkID DESC");
+	while($row = mysql_fetch_array($qry))
+		
+	echo "<tr><td>$row[otorenkID]</td><td>$row[otorenkADI]</td><td><a href='?ak=renksil&id=$row[otorenkID]' title='Delete'><img src='images/sil.jpg' /></a></td></tr>";
+	echo "</table>";
+	echo "</div>";
+	
+?>

@@ -1,0 +1,33 @@
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="templates/tema2/slider_car/car.js"></script>
+
+<div class="caption">En Çok İzlenen Araçlar</div>
+<div id="cerceve">
+<div class="prev"><img src="templates/tema2/slider_car/imageNavLeft.gif"></div>
+<div class="anyClass">
+    <ul>
+<?php
+	$qry = mysql_query("SELECT * FROM ilan ORDER BY ilanHIT DESC LIMIT 0,7");
+	$i=0;
+	while($row = mysql_fetch_array($qry)){
+		$resim = $row['resim1'];
+?>		<li style="padding:2px;"><a href="ilan_goster.php?id=<?php echo $row['ilanID']; ?>"><img src="uploads/otofoto/<?php echo $resim; ?>" alt="" width="120" height="90" ></a><br />
+	    <div class="encokincelenen"><a href="ilan_goster.php?id=<?php echo $row['ilanID']; ?>"><?php echo $row['ilanBASLIK']." (".$row['ilanHIT']; ?>)</a> </div></li>
+<?php
+}
+?>
+    </ul>
+</div>
+<div class="next"><img src="templates/tema2/slider_car/imageNavRight.gif"></div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $(".anyClass").jCarouselLite({
+        btnNext: ".next",
+        btnPrev: ".prev",
+     	visible: 4,
+       	auto: 3000
+    });
+});
+</script>

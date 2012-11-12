@@ -1,0 +1,42 @@
+<div id="main">
+	<?php include("mainleft.html"); ?>
+	<div id="mainright">
+		<div class="caption">Cars</div>
+		<div id="mainrightnews">
+		<?php
+		$sql=mysql_query("SELECT * FROM ilan WHERE ilanONAY='1' ORDER BY ilanID DESC");
+		while ($row=mysql_fetch_array($sql)) {
+			$duzenlifiyat = number_format($row['ilanFIYAT']);
+			echo "<div class='habercerceve'>";
+				echo "<div class='haberbaslik'><a href='ilan_goster.php?id=$row[ilanID]'>$row[ilanBASLIK]</a></div>";
+				echo "<div class='haberresim'><a href='ilan_goster.php?id=$row[ilanID]'><img src='uploads/otofoto/$row[resim1]' style='border:2px solid #ebebeb;padding:1px;width:122px;height:92px;'></a></div>";
+				echo "<div class='anasayfamodel'>$row[ilanMODEL] Model</div>";
+				echo "<div class='anasayfafiyat'>$duzenlifiyat $row[ilanFIYATTIP]</div>";
+			echo "</div>";
+		}
+		?>
+		<div id="clear" style="clear:both;"></div>
+		</div>
+	
+	</div>
+	<div style="clear:both;"></div>
+	<div style="border:0px dashed;width:850px;height:300px;">
+		<div class="caption">Trademark</div>
+			<table border="0" width="845">
+				<tr valign="top">
+					<td>
+			<?php 
+				$sorgu = "SELECT M.otomarkaID, M.otomarkaADI, COUNT(I.ilanMARKA) as say FROM ilan I RIGHT JOIN otomarka M ON I.ilanMARKA=M.otomarkaID GROUP BY M.otomarkaID ORDER BY otomarkaADI ASC";
+				$result =  mysql_query($sorgu) or die(mysql_error());
+				while ($row=mysql_fetch_array($result)) {
+					echo "<div class='markalartek'><a href='ilan_arama.php?marka=$row[otomarkaID]'>".$row['otomarkaADI']." (".$row['say'].")</a></div>";
+					if (++$i % 11 == 0) {
+						echo "</td><td>";						
+					}
+				}
+			?>
+					</td>
+				</tr>
+			</table>
+	</div>
+</div>		

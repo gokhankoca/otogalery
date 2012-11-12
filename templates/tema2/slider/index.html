@@ -1,0 +1,43 @@
+  <link rel="stylesheet" href="templates/tema2/slider/style.css" type="text/css" media="screen" />
+  <script type="text/javascript">var _siteRoot='index.html',_root='index.html';</script>
+  <script type="text/javascript" src="templates/tema2/slider/js/jquery.js"></script>
+  <script type="text/javascript" src="templates/tema2/slider/js/scripts.js"></script>
+ </head>
+
+  <!--/top-->
+  <div id="headerslider">
+  <div class="wrap">
+   <div id="slide-holder">
+<div id="slide-runner">
+<?php
+	$qry = mysql_query("SELECT * FROM ilan WHERE ilanMANSET='1' ORDER BY ilanID DESC LIMIT 0,7");
+	$i=0;
+	while($row = mysql_fetch_array($qry)){
+		$resim = $row['resim1'];
+		$baslik[] = $row['ilanBASLIK'];
+?>
+    <a href="ilan_goster.php?id=<?php echo $row['ilanID'];?>"><img id="slide-img-<?php echo ++$i; ?>" src="uploads/otofoto/<?php echo $resim; ?>" class="slide" alt="" style="width:573px;height:350px;" /></a>
+<?php
+}
+?>
+    <div id="slide-controls">
+     <p id="slide-client" class="text"><strong></strong><span></span></p>
+     <p id="slide-desc" class="text"></p>
+     <p id="slide-nav"></p>
+    </div>
+</div>
+	
+	<!--content featured gallery here -->
+   </div>
+   <script type="text/javascript">
+    if(!window.slider) var slider={};slider.data=[
+    {"id":"slide-img-1","client":"","desc":"<?php echo $baslik[0]; ?>"},
+    {"id":"slide-img-2","client":"","desc":"<?php echo $baslik[1]; ?>"},
+    {"id":"slide-img-3","client":"","desc":"<?php echo $baslik[2]; ?>"},
+    {"id":"slide-img-4","client":"","desc":"<?php echo $baslik[3]; ?>"},
+    {"id":"slide-img-5","client":"","desc":"<?php echo $baslik[4]; ?>"},
+    {"id":"slide-img-6","client":"","desc":"<?php echo $baslik[5]; ?>"},
+    {"id":"slide-img-7","client":"","desc":"<?php echo $baslik[6]; ?>"}];
+   </script>
+  </div></div><!--/header-->
+

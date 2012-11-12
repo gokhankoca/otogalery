@@ -1,0 +1,231 @@
+<?php
+if (!isset($_SESSION["user"]))
+header("Location: /admin/login.php");
+
+$id=$_GET['id'];
+
+$sorgu=mysql_query("SELECT * FROM ilan WHERE ilanID=$id");
+$roww=mysql_fetch_array($sorgu);
+
+
+?>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#marka').change(function(){
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				url:"../ajax/altmarka.php",
+				data:"marka="+$(this).val(),
+				success:function(j){
+					console.log(j);
+					$("#tur").html("");
+					if(j.count>0){
+						$.each(j.data,function(k,tur){
+							$("#tur").append("<option value='"+tur.ototurID+"'>"+tur.ototurADI+"</option>");
+						});
+					}else{
+					$("#ototur").html("<option>No Entry</option>");
+					}
+				}
+			});
+		});
+		$("#marka").trigger("change");
+		$('#tip').change(function(){
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				url:"../ajax/alttip.php",
+				data:"tip="+$(this).val(),
+				success:function(j){
+					$("#kasatipi").html("");
+					if(j.count>0){
+						$.each(j.data,function(k,tip){
+							$("#kasatipi").append("<option value='"+tip.otokasatipID+"'>"+tip.otokasatipADI+"</option>");
+						});
+					}else{
+					$("#kasatipi").html("<option>No Safe Type</option>");
+					}
+				}
+			});
+		});
+		$("#tip").trigger("change");
+	});
+</script>
+
+<div id='adminortamenu'><h2>Announcements Edit</h2></div>
+
+<div id='anaiceriktablo'>
+<form method="POST" action="?ak=ilanduzelt&id=<?php echo $_GET['id']; ?>" enctype="multipart/form-data">
+<table>
+<tr>
+	<td>Announcement Title :</td>
+	<td><input type="text" name="ilanbaslik" size="50" value="<?php echo $roww['ilanBASLIK']; ?>"></td>
+</tr>
+<tr>
+	<td>Stock</td>
+	<td>
+		<select name="el">
+			<?php
+			$sql="SELECT * FROM otoel ORDER BY otoelID DESC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+			?>
+			   <option value="<?php echo $rows['otoelID']; ?>" <?php if ($rows['otoelID']==$roww['ilanEL']){ echo "selected"; }?>><?php echo $rows['otoelADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+	</td>
+</tr>
+<tr>
+	<td>Tip</td>
+	<td>
+		<select name="tip" id="tip">
+			<?php
+			$sql="SELECT * FROM ototip ORDER BY ototipID DESC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['ototipID']; ?>" <?php if ($rows['ototipID']==$roww['ilanTIP']){ echo "selected"; }?>><?php echo $rows['ototipADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+	</td>
+</tr>
+<tr>
+	<td>Trademark</td>
+	<td>
+		<select id="marka" name="marka">
+			<?php
+			$sql="SELECT * FROM otomarka ORDER BY otomarkaADI ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otomarkaID']; ?>" <?php if ($rows['otomarkaID']==$roww['ilanMARKA']) {echo "selected"; } ?>><?php echo $rows['otomarkaADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+		</select>
+	</td>
+</tr>
+
+<tr>
+	<td>Model</td>
+	<td>
+		<select id="model" name="model">
+		<?php
+			$busene = date('Y');
+			for($i=$busene; $i>=1970; $i--){
+		?>
+   <option value="<?php echo $i; ?>" <?php if ($i==$roww['ilanMODEL']){ echo "selected"; }?>><?php echo $i; ?></option>
+
+<?php
+}
+echo "</select>";
+			?> 
+	</td>
+</tr>
+<tr><td>Fuel Type</td><td><select name="yakit"><option value="1" <?php if ($roww['ilanYAKIT']=='1'){ echo "selected"; }?>>Gasoline</option><option value="2" <?php if ($roww['ilanYAKIT']=='2'){ echo "selected"; }?>>Diesel</option></select></td></tr>
+<tr>
+	<td>Safe Type</td>
+	<td><select name="kasatipi" id="kasatipi">
+		
+		</select>
+	</td>
+</tr>
+<tr>
+	<td>Colour</td>
+	<td><select name="renk">
+			<?php
+			$sql="SELECT * FROM otorenk ORDER BY otorenkID ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otorenkID']; ?>" <?php if ($rows['otorenkID']==$roww['ilanRENK']){ echo "selected"; }?>><?php echo $rows['otorenkADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+		</select>
+		
+	</td>
+</tr>
+<tr><td>Engine Volume</td><td><input type="text" name="hacim" value="<?php echo $roww['ilanHACIM']; ?>"> cm3</td></tr>
+<tr><td>Engine Power</td><td><input type="text" name="beygir" value="<?php echo $roww['ilanGUC']; ?>"> hp</td></tr>
+<tr><td>Steering</td><td><select name="dumen"><option value="1" <?php if ($roww['ilanDUMEN']=='1'){ echo "selected"; }?>>Right</option><option value="0" <?php if ($roww['ilanDUMEN']=='0'){ echo "selected"; }?>>Left</option></select></td></tr>
+<tr><td>Kilometer</td><td><input type="text" name="km" value="<?php echo $roww['ilanKM']; ?>"></td></tr>
+<tr><td>Gear</td><td><input type="text" name="vitesadeti" size="1" value="<?php echo $roww['ilanVITES']; ?>">
+		<select name="vitestipi" style="margin-left:15px;">
+			<?php
+			$sql="SELECT * FROM otovitestipi ORDER BY otovitestipID ASC";
+			$qry=mysql_query($sql);
+			while ($rows = mysql_fetch_array($qry)){
+				print_r($rows);
+			?>
+			   <option value="<?php echo $rows['otovitestipID']; ?>" <?php if ($rows['otovitestipID']==$roww['ilanVITESTIP']){ echo "selected"; }?>><?php echo $rows['otovitestipADI']; ?></option>
+			
+			<?php
+			}
+			echo "</select>";
+			
+			?> 
+		</select>
+</td>
+<tr><td>Door Number</td><td><input type="text" name="kapi" size="1" value="<?php echo $roww['ilanKAPI']; ?>"></td>
+</tr>
+<tr><td>Price</td><td><input type="text" name="otofiyat" value="<?php echo $roww['ilanFIYAT']; ?>">
+		<select name="parabirimi" style="margin-left:15px;">
+			<option value="TL" <?php if ($roww['ilanFIYATTIP']=='TL'){ echo "selected"; }?>>TL</option>
+			<option value="STG" <?php if ($roww['ilanFIYATTIP']=='STG'){ echo "selected"; }?>>STG</option>
+			<option value="EURO" <?php if ($roww['ilanFIYATTIP']=='EURO'){ echo "selected"; }?>>Euro</option>
+			<option value="Dolar" <?php if ($roww['ilanFIYATTIP']=='Dolar'){ echo "selected"; }?>>Dolar</option>
+		</select>
+	</td>
+</tr>
+</tr>
+<tr><td>Explanation</td><td><textarea name="not" cols="40" rows="6"><?php echo $roww['ilanNOT']; ?></textarea></td></tr>
+</table>
+</div>
+
+<div id="anaiceriktablo">
+<table>
+<tr>
+	<td>Image 1 :</td><td><input type="file" name="resim1"></td><td><?php echo "$roww[resim1]"; ?></td>
+</tr>
+<tr>
+	<td>Image 2 :</td><td><input type="file" name="resim2"></td><td><?php echo "$roww[resim2]"; ?></td>
+</tr>
+<tr>
+	<td>Image 3 :</td><td><input type="file" name="resim3"></td><td><?php echo "$roww[resim3]"; ?></td>
+</tr>
+<tr>
+	<td>Image 4 :</td><td><input type="file" name="resim4"></td><td><?php echo "$roww[resim4]"; ?></td>
+</tr>
+<tr>
+	<td>Image 5 :</td><td><input type="file" name="resim5"></td><td><?php echo "$roww[resim5]"; ?></td>
+</tr>
+<tr>
+	<td><input type="submit" name="gonder" value="Send"></td>
+</tr>
+</table>
+</div>
+</form>
+</div>
+</div>
+</div> 
+

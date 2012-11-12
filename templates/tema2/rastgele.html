@@ -1,0 +1,16 @@
+	<div class='caption'>Shop Window</div>
+<div id="rastgelecerceve" style="border:0px dashed;float:right;width:650px;min-height:150px;padding-right:10px;">
+	<?php
+		$sql=mysql_query("SELECT * FROM ilan WHERE ilanONAY='1' ORDER BY rand() LIMIT 0,7");
+		while ($row=mysql_fetch_array($sql)) {
+			$duzenlifiyat = number_format($row['ilanFIYAT']);
+			echo "<div class='habercerceve'>";
+				echo "<div class='haberbaslik'><a href='ilan_goster.php?id=$row[ilanID]'>$row[ilanBASLIK]</a></div>";
+				echo "<div class='haberresim'><a href='ilan_goster.php?id=$row[ilanID]'><img src='uploads/otofoto/$row[resim1]' style='border:2px solid #ebebeb;padding:1px;width:122px;height:92px;'></a></div>";
+				echo "<div class='anasayfamodel'>$row[ilanMODEL] Model</div>";
+				echo "<div class='anasayfafiyat'>$duzenlifiyat $row[ilanFIYATTIP]</div>";
+			echo "</div>";
+		}
+	
+	?>
+</div>

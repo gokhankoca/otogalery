@@ -1,0 +1,111 @@
+<style>
+table.grid {
+	border-top: 1px solid #D9E6F0;
+	border-left: 1px solid #D9E6F0;
+	width: 630px;
+	font-family: sans-serif;
+}
+
+table.grid tr th {
+	border-right: 1px solid #D9E6F0;
+	border-bottom: 1px solid #D9E6F0;
+	background-color: #FAFAFA;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px;
+}
+
+table.grid tr td {
+	border-right: 1px solid #D9E6F0;
+	border-bottom: 1px solid #D9E6F0;
+	padding: 10px;
+}
+
+table.grid tr td._opcol div._gridop {
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	cursor: pointer;
+	cursor: hand;
+	background-image: url('<?php echo SITE_PATH; ?>/media/ui-icons_222222_256x240.png');
+}
+
+td._opcol div._locked1			{ background-position: -192px -96px; }
+td._opcol div._locked0			{ background-position: -208px -96px; }
+td._opcol div._arenew1			{ background-position: -64px  -80px; }
+td._opcol div._arenew0			{ background-position: -64px  -80px; }
+td._opcol div._domain_panel		{ background-position: -192px -112px;}
+td._opcol div._cancel			{ background-position: -80px  -128px;}
+td._opcol div._domain_transfer	{ background-position: -80px  -48px; }
+
+table.grid tr.rowHover:hover {
+	background-color: #CCFFC6;
+	cursor: hand;
+	cursor: pointer;
+}
+</style>
+
+<div id="mainsabit">
+	
+
+	<?php 
+	
+	$marka = isset($_GET['marka']) ? $_GET['marka'] : 0;
+	
+		
+		
+		$where=array();
+		
+		if ($marka>0) {$where[]="otomarkaID=$marka";}
+		
+		
+		$order="ilanID DESC";			
+
+		$sql="SELECT * FROM ilan I 
+		INNER JOIN otomarka M ON T.ilanMARKA=M.otomarkaID 
+		WHERE ".join(" AND ",$where)." ORDER BY $order";
+		$ilanlar=$db->get_results($sql);
+	?>
+	
+	<div id='ilanaramacerceve'>
+		<?php if (count($ilanlar)>0) {
+			?><table class="grid" border="0" style="font-size:12px;">
+				<tr style="font-weight:bold;">
+					<td>Fotoğraf</td>
+					<td>Başlık</td>
+					<td>El-Tip</td>
+					<td>Marka-Tür</td>
+					<td>Model</td>
+					<td>Fiyat</td>
+				</tr>
+				<?php foreach ($ilanlar as $ilan) {	
+					$fiyat= $ilan->ilanFIYAT;
+					$duzenlifiyat = number_format($fiyat);
+				?>
+					<tr>
+						<td><img src="uploads/otofoto/<?php echo $ilan->resim1; ?>" style="width:100px;" /></td>
+						<td><a href="ilan_goster.php?id=<?php echo $ilan->ilanID ?>"><?php echo $ilan->ilanBASLIK; ?></a></td>
+						<td><?php echo $ilan->otoelADI." ".$ilan->ototipADI; ?></td>
+						<td><?php echo $ilan->otomarkaADI." ".$ilan->ototurADI; ?></td>
+						<td><?php echo $ilan->ilanMODEL; ?></td>
+						<td style="width:70px;text-align:center;"><?php echo $duzenlifiyat." ".$ilan->ilanFIYATTIP; ?></td>
+					</tr>
+				<?php } ?>
+			</table>
+		<?php 
+		echo "<div id='aracbulundu'>";
+			echo "<b>".count($ilanlar)."</b> "."car(s) Found";
+		echo "</div>";
+		} else { ?>
+		<div id='aracbulundu'>
+			Don't Found !
+		</div>
+		<?php } ?>
+	
+	</div>
+
+<div id="clear"></div>
+
+
+</div>
